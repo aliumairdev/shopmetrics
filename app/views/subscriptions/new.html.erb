@@ -67,7 +67,7 @@
         <div>
           <% @plan.features.each do |plan_feature| %>
             <div class="flex mb-2 text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-2 text-primary-500 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 mr-2 text-primary-500 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
               <div><%= plan_feature %></div>
@@ -83,8 +83,8 @@
       <h1 class="hidden h3 mb-4 lg:block"><%= t(".title") %></h1>
 
       <h5 class="text-gray-700 dark:text-gray-300 font-semibold my-4 border-b border-gray-200 pb-2"><%= t(".account") %></h5>
-      <div class="flex items-center mb-8">
-        <%= account_avatar current_account, class: "h-10 w-10 rounded-full mr-4" %>
+      <div class="flex items-center gap-4 mb-8">
+        <%= account_avatar current_account %>
         <h4><%= current_account.name %></h4>
       </div>
 

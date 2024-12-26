@@ -45,4 +45,3 @@ yarn-debug.log*
 .DS_Store
 .idea
 *~
-.tool-versions
