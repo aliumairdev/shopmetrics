@@ -1,0 +1,24 @@
+---
+application_name: ShopMetrics
+business_name: ShopMetrics, LLC
+business_address: 
+domain: devsino.com
+support_email: support@devsino.com
+default_from_email: ShopMetrics <no-reply@edevsino.com>
+background_job_processor: solid_queue
+email_provider: sendgrid
+personal_accounts: false
+apns: true
+fcm: true
+integrations:
+- sentry
+omniauth_providers:
+payment_processors:
+- stripe
+multitenancy:
+- subdomain
+- path
+gems:
+- acts_as_tenant
+- refer
+- whenever

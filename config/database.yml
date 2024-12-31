@@ -13,21 +13,26 @@
 # gem 'pg'
 #
 default: &default
-  adapter: postgresql
+  adapter: <%= ENV['DB_ADAPTER'] || "postgresql" %>
+  url: <%= ENV["DATABASE_URL"] %>
   encoding: unicode
+  advisory_locks: <%= if ENV["USE_PGBOUNCER"].present?; false; else; true; end %>
+  prepared_statements: <%= if ENV["USE_PGBOUNCER"].present?; false; else; true; end %>
+  connect_timeout: 2
+  timeout: 5000
+  checkout_timeout: 5 # Seconds to wait for a connectio
+  reaping_frequency: 10 # Check for stale connections every 10 seconds
+  idle_timeout: 300 # 5 minutes in seconds
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  variables:
+    statement_timeout: 120000 # Increase timeout to 60 seconds
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  <% if ENV["DB_HOST"] %>
-  host: <%= ENV["DB_HOST"] %>
-  username: postgres
-  password: postgres
-  <% end %>
 
 development:
   primary:
     <<: *default
-    database: jumpstart_development
+    url: <%= ENV["DATABASE_URL"] %>
 
     # The specified database role being used to connect to postgres.
     # To create additional roles in postgres see `$ createuser --help`.
@@ -58,46 +63,47 @@ development:
 
   cache:
     <<: *default
-    database: jumpstart_development_cache
+    database: shopmetrics_v1_development_cache
     migrations_paths: db/cache_migrate
+    url: <%= ENV["DATABASE_CACHE_URL"] %>
   queue:
     <<: *default
-    database: jumpstart_development_queue
+    database: shopmetrics_v1_development_queue
     migrations_paths: db/queue_migrate
+    url: <%= ENV["DATABASE_QUEUE_URL"] %>
   cable:
     <<: *default
-    database: jumpstart_development_cable
+    database: shopmetrics_v1_development_cable
     migrations_paths: db/cable_migrate
+    url: <%= ENV["DATABASE_CABLE_URL"] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: jumpstart_test
+  url: <%= if ENV["CI"] == "true"; ENV["DATABASE_URL"]; else; ENV["TEST_DATABASE_URL"]; end %>
 
 staging:
   primary: &primary_staging
     <<: *default
-    database: jumpstart_staging
-    username: jumpstart
-    password: <%= ENV["POSTGRES_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
 
   cache:
-    <<: *primary_staging
-    database: jumpstart_staging_cache
+    <<: *default
+    database: shopmetrics_v1_staging_cache
     migrations_paths: db/cache_migrate
-    # url: <%= ENV["CACHE_DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_CACHE_URL"] %>
   queue:
-    <<: *primary_staging
-    database: jumpstart_staging_queue
+    <<: *default
+    database: shopmetrics_v1_staging_queue
     migrations_paths: db/queue_migrate
-    # url: <%= ENV["QUEUE_DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_QUEUE_URL"] %>
   cable:
-    <<: *primary_staging
-    database: jumpstart_staging_cable
+    <<: *default
+    database: shopmetrics_v1_staging_cable
     migrations_paths: db/cable_migrate
-    # url: <%= ENV["CABLE_DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_CABLE_URL"] %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -122,22 +128,19 @@ staging:
 production:
   primary: &primary_production
     <<: *default
-    database: jumpstart_production
-    username: jumpstart
-    password: <%= ENV["POSTGRES_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
 
   cache:
-    <<: *primary_production
-    database: jumpstart_production_cache
+    <<: *default
+    database: shopmetrics_v1_production_cache
     migrations_paths: db/cache_migrate
-    # url: <%= ENV["CACHE_DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_CACHE_URL"] %>
   queue:
-    <<: *primary_production
-    database: jumpstart_production_queue
+    <<: *default
+    database: shopmetrics_v1_production_queue
     migrations_paths: db/queue_migrate
-    # url: <%= ENV["QUEUE_DATABASE_URL"] %>
   cable:
-    <<: *primary_production
-    database: jumpstart_production_cable
+    <<: *default
+    database: shopmetrics_v1_production_cable
     migrations_paths: db/cable_migrate
-    # url: <%= ENV["CABLE_DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_CABLE_URL"] %>
