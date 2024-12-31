@@ -93,7 +93,7 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:password@localhost:5432/test
           REDIS_URL: redis://localhost:6379/0
-          RAILS_TEST_KEY: ${{ secrets.RAILS_TEST_KEY }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           bin/rails test:prepare db:test:prepare zeitwerk:check test test:system
 
